@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items List</title>
+    <style>
+        #itemsList {
+            margin-top: 20px;
+        }
+        .item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .item:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Items List</h1>
+    <button onclick="getItems()">Get Items</button>
+    <div id="itemsList"></div>
+
+    <script>
+        function getItems() {
+            fetch('http://localhost:3000/api/items')
+            .then(response => response.json())
+            .then(data => {
+                displayItems(data.response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function displayItems(items) {
+            const itemsList = document.getElementById('itemsList');
+            itemsList.innerHTML = '';
+
+            if (items.length === 0) {
+                itemsList.innerHTML = '<p>No items found</p>';
+            } else {
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('item');
+
+                    const title = document.createElement('h3');
+                    title.textContent = item.title;
+
+                    const body = document.createElement('p');
+                    body.textContent = item.body;
+
+                    itemDiv.appendChild(title);
+                    itemDiv.appendChild(body);
+
+                    itemsList.appendChild(itemDiv);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
